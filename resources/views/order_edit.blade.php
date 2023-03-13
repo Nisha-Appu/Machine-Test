@@ -74,8 +74,9 @@
 
                                         <select id='product' name="product" class="form-control">
                                         @foreach($product as $pro)
-                                      
-                                     <option value="{{ $pro->id }}">{{$pro->productname}}</option>
+<option value="{{ $pro->id }}" {{ $pro->id == $orders->product ? 'selected' : '' }}>{{$pro->productname}}</option>                      
+                               
+                                    
 
                                      @endforeach
                                         </select>

@@ -28,36 +28,36 @@ class OrderController extends Controller
 
 
 
-    //     public function store(Request $request)
-    //     {
-    //     try{
+        public function store(Request $request)
+        {
+        try{
     
-    //         $request->validate([
-    //                     'customername'=>'required',
-    //                     'quantity'=>'required',
-    //                     'phone' => 'required',
+            $request->validate([
+                        'customername'=>'required',
+                        'quantity'=>'required',
+                        'phone' => 'required',
             
-    //                 ]);
-    //         $data = $request->input();
+                    ]);
+            $data = $request->input();
             
-    //           $order = new Order;
-    //           $order->customername = $data['customername'];
-    //           $order->quantity = $data['quantity'];
-    //           $order->product = $data['product'];
-    //           $order->phone = $data['phone'];
-    //           $order->orderid = random_int(1000, 9999);
-    //           //$order->orderid = '#'.str_pad($latestOrder->id + 1, 8, "0", STR_PAD_LEFT);
+              $order = new Order;
+              $order->customername = $data['customername'];
+              $order->quantity = $data['quantity'];
+              $order->product = $data['product'];
+              $order->phone = $data['phone'];
+              $order->orderid = random_int(1000, 9999);
+              //$order->orderid = '#'.str_pad($latestOrder->id + 1, 8, "0", STR_PAD_LEFT);
          
-    //           $order->save();
-    //        //   $student->email = $data['user-email'];
-    //        return redirect()->back()
-    //                            ->with(['success' => 'Order Added Successfully.']);
-    //      }
-    //         catch(Exception $e){
-    //          return redirect()->back()
-    //                         ->with(['failed' => 'Failed.']);
-    //      }
-    // }
+              $order->save();
+           //   $student->email = $data['user-email'];
+           return redirect()->back()
+                               ->with(['success' => 'Order Added Successfully.']);
+         }
+            catch(Exception $e){
+             return redirect()->back()
+                            ->with(['failed' => 'Failed.']);
+         }
+    }
 
 public function destroy($id) {
            
@@ -115,33 +115,33 @@ $order = Order::where('id',$order_id)->update([
  }
  
 
-        public function store(Request $request)
-        {
-        try{
-            $data = $request->input();
-            // $data->quantity = $request->quantity;
+    //     public function store(Request $request)
+    //     {
+    //     try{
+    //         $data = $request->input();
+    //         // $data->quantity = $request->quantity;
            
-         return  $data;
-         foreach($request->productname as $key=>$productname)
-         {
+    //      return  $data;
+    //      foreach($request->productname as $key=>$productname)
+    //      {
 
             
-            $data = new Order();
-            $data->productname = $productname;
-            $data->phone = $request->phone;
-            $data->quantity = $request->quantity;
-            $data->customername = $request->customername;
-            $data->save();
+    //         $data = new Order();
+    //         $data->productname = $productname;
+    //         $data->phone = $request->phone;
+    //         $data->quantity = $request->quantity;
+    //         $data->customername = $request->customername;
+    //         $data->save();
 
-         }
-           return redirect()->back()
-                               ->with(['success' => 'Order Added Successfully.']);
-         }
-            catch(Exception $e){
-             return redirect()->back()
-                            ->with(['failed' => 'Failed.']);
-         }
-    }
+    //      }
+    //        return redirect()->back()
+    //                            ->with(['success' => 'Order Added Successfully.']);
+    //      }
+    //         catch(Exception $e){
+    //          return redirect()->back()
+    //                         ->with(['failed' => 'Failed.']);
+    //      }
+    // }
 
 
 

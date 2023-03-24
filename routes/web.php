@@ -25,6 +25,6 @@ Route::get('/add_order', [App\Http\Controllers\OrderController::class, 'view']);
 Route::get('/delete_order/{id}', [App\Http\Controllers\OrderController::class, 'destroy']);
 Route::post('/add_order', [App\Http\Controllers\OrderController::class, 'store'])->name('order-store');
 Route::get('/edit_order/{id}', [App\Http\Controllers\OrderController::class, 'edit']);
-Route::put('/update-order/{order_id}', [App\Http\Controllers\OrderController::class, 'update']);
+Route::PUT('/update-order/{id}', [App\Http\Controllers\OrderController::class, 'update']);
 
-Route::get('/invoice/{order_id}', [App\Http\Controllers\InvoiceController::class, 'View']);
+Route::get('/invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'View']);

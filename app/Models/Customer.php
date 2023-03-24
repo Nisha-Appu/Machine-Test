@@ -5,21 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Order extends Model
+class Customer extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'customer_id','product','quantity',
+        'customername','phone','order_id'
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at'=> 'datetime',
     ];
-
-    protected $guarded=['id'];
-    public function product(){
-
-        return $this->belongsToMany(Product::class,'product')->withPivot('quantity', 'price','total')->withTimestamps();
-    }
 }

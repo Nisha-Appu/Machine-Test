@@ -12,10 +12,8 @@ class InvoiceController extends Controller
 {
 
 
-    public function view(Request $request,$order_id){
-        // $data = $request->input();
-        // return  $order_id;
-        // exit;
+    public function view(Request $request,$id){
+       
        
         $product = Product::all();
 
@@ -26,10 +24,27 @@ class InvoiceController extends Controller
 
         $order= DB::table('orders')
         ->Join('products', 'orders.product', '=', 'products.id')
-        ->select('products.*', 'orders.quantity','orders.orderid')
-        ->where('orders.id', '=', $order_id)
-        ->get();
+        ->Join('customers', 'orders.customer_id', '=', 'customers.id')
+        ->select('products.*', 'orders.quantity','orders.id','products.productname','customers.order_id')
+      
+        ->where('orders.customer_id', '=', $id)
+       
+        ->get( );
+        // $total = 0;
+        // foreach ($order as $key=>$ord)
+        // {
+    
 
+            
+        //     $total =  $ord->price * $ord->quantity;
+           
+   
+           
+          
+        // }
+       
+        
+        // return   sum($total); 
         // $order =select `orders`.`orderid`, `orders`.`quantity`, `products`.`productname`, `products`.`id` from `orders` inner join `products` on `products`.`id` = `orders`.`product`;
 
               //  $storedItem['price'] = $order->price * $order['qty'];
@@ -41,10 +56,10 @@ class InvoiceController extends Controller
         }
 
 
-    public function Invoice(Request $request,$order_id)
+    public function Invoice(Request $request,$orderid)
     {
      
-        
+       
         $pdf = PDF::loadView(view : 'invoice');
 
         return $pdf->download(filename : 'invoice_pdf');

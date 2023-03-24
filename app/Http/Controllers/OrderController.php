@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Customer;
 use DB;
 use App\VSE;
+use Carbon\Carbon;
+
 
 
 
@@ -15,53 +18,63 @@ class OrderController extends Controller
     public function view(){
        
         $product = Product::all();
+        // SELECT DISTINCT column_name
+        // FROM table_name;
+        $order = DB::table('orders')
+        ->join('customers', 'orders.customer_id', '=', 'customers.id')
+        ->join('products', 'products.id', '=', 'orders.product')
+        ->select('orders.*', 'products.*', 'customers.*')
+        
+        ->get()->unique('customername');
 
-        $order = Order::join('products', 'products.id', '=', 'orders.product')
-                ->get(['products.*', 'orders.*']);
+        // $order = Order::join('products', 'products.id', '=', 'orders.product')
+        //         ->get(['products.*', 'orders.*'])->unique('customername');
               //  $storedItem['price'] = $order->price * $order['qty'];
 //  return  $order;
 //  exit;
 
-        return view('add_order',['product'=>$product,'order'=>$order]);
+           $orderid =  random_int(1000, 9999);
+
+        return view('add_order',['product'=>$product,'order'=>$order,'orderid'=>$orderid]);
         }
 
 
 
 
-        public function store(Request $request)
-        {
-        try{
+    //     public function store(Request $request)
+    //     {
+    //     try{
     
-            $request->validate([
-                        'customername'=>'required',
-                        'quantity'=>'required',
-                        'phone' => 'required',
+    //         $request->validate([
+    //                     'customername'=>'required',
+    //                     'quantity'=>'required',
+    //                     'phone' => 'required',
             
-                    ]);
-            $data = $request->input();
+    //                 ]);
+    //         $data = $request->input();
             
-              $order = new Order;
-              $order->customername = $data['customername'];
-              $order->quantity = $data['quantity'];
-              $order->product = $data['product'];
-              $order->phone = $data['phone'];
-              $order->orderid = random_int(1000, 9999);
-              //$order->orderid = '#'.str_pad($latestOrder->id + 1, 8, "0", STR_PAD_LEFT);
+    //           $order = new Order;
+    //           $order->customername = $data['customername'];
+    //           $order->quantity = $data['quantity'];
+    //           $order->product = $data['product'];
+    //           $order->phone = $data['phone'];
+    //           $order->orderid = random_int(1000, 9999);
+    //           //$order->orderid = '#'.str_pad($latestOrder->id + 1, 8, "0", STR_PAD_LEFT);
          
-              $order->save();
-           //   $student->email = $data['user-email'];
-           return redirect()->back()
-                               ->with(['success' => 'Order Added Successfully.']);
-         }
-            catch(Exception $e){
-             return redirect()->back()
-                            ->with(['failed' => 'Failed.']);
-         }
-    }
+    //           $order->save();
+    //        //   $student->email = $data['user-email'];
+    //        return redirect()->back()
+    //                            ->with(['success' => 'Order Added Successfully.']);
+    //      }
+    //         catch(Exception $e){
+    //          return redirect()->back()
+    //                         ->with(['failed' => 'Failed.']);
+    //      }
+    // }
 
 public function destroy($id) {
-           
-    DB::delete('delete from orders where id = ?',[$id]);
+      
+    DB::delete('delete from customers where id = ?',[$id]);
 
     return redirect()->back()
     ->with(['delete_msg' => 'Record Deleted']);
@@ -71,42 +84,83 @@ public function destroy($id) {
  public function edit($id)
  {
    
-    $order = Order::find($id);
-    $product = Product::all();
+   $customer = Customer::select('*')
+                ->where('id', '=', $id)
+                
+                ->first();
+
+   $order = Order::select('*')
+                ->where('customer_id', '=', $id)
+                
+                ->get();
+
+    // foreach($order as $key=>$product)
+    //             {
+    //                 return $order;
+    //                 exit;
+    //             }
+                // return $order;
+                // exit;
+    //  $product = DB::table('orders')
+    //         ->join('products', 'orders.product', '=', 'products.id')
+    //         ->select('orders.*', 'products.productname', 'products.price','products.id')
+    //         ->where('id', '=', $id)
+    //         ->get();
+              //  return  $product;
+   $products = Product::all();
     // return $order_edit;
     // exit;
         // $order = Order::join('products', 'products.id', '=', 'orders.product')
         //         ->get(['products.*', 'orders.*']);
   
-     return view('order_edit',['orders'=>$order,'product'=>$product]);  // -> resources/views/stocks/edit.blade.php
+     return view('order_edit',['orders'=>$order,'customers'=>$customer,'allproducts'=>$products]);  // -> resources/views/stocks/edit.blade.php
  }
 
    
- public function update(Request $request,$order_id)
+ public function update(Request $request,$id)
  {
     try{
-        $data = $request->input();
-      
-  //  $id=  $request->id;
-    $data =   $request->validate([
-     'customername'=>'required',
-     'phone'=>'required',
-     'quantity'=>'required',
-   
      
- ]);
-$order = Order::where('id',$order_id)->update([
-   
-      // 'id'=>$product_id,
-         'customername'  =>  $data['customername'],
-         'phone'  => $data['phone'],
-         'quantity'  => $data['quantity'],
-       //  'product'  => $data['product'],
-        
-         
-        
-     ]);
-     return redirect('add_order')->with('success','Order  Has Been updated successfully');
+       $data = $request->input();
+        $orders = DB::table('orders')
+        ->where('customer_id', '=', $id)
+      
+        ->get();
+//    return $data;
+//    exit;
+        $data = $request->all();
+     
+            $date = Carbon::now()->format('Y-m-d');
+             $ids =$request->id;
+
+             $order = Customer::where('id',$id)->update([
+                'phone' => $request->phone,
+                'customername' => $request->customername,
+                'order_id'=>$request->orderid,
+                'created_at' =>  $date,
+            ]);
+
+          
+            foreach($orders as $key=>$order)
+
+            {
+                // $id =[4,5];
+  
+                //  return $order;
+                // exit;   
+                
+          Order::where('id', $order->id)
+                   ->update([
+                    'product' => $request->product[$key],
+                    'quantity' => $request->quantity[$key],
+                       'created_at' =>  $date,
+                   ]);
+     
+       
+       }
+  
+
+  return redirect('add_order')->with('success','Order  Has Been updated successfully');
     }
     catch(Exception $e){
         return redirect()->back()
@@ -115,33 +169,66 @@ $order = Order::where('id',$order_id)->update([
  }
  
 
-    //     public function store(Request $request)
-    //     {
-    //     try{
-    //         $data = $request->input();
-    //         // $data->quantity = $request->quantity;
-           
-    //      return  $data;
-    //      foreach($request->productname as $key=>$productname)
-    //      {
+        public function store(Request $request)
+        {
+        try{
 
+            $data = $request->input();
+            // return  $data ;
+            // exit;
+            // $data->quantity = $request->quantity;
+            $order_id = random_int(1000, 9999);
+            $date = Carbon::now()->format('d-m-y');
+            $saverecord = [
+              
+              
+               
+                'phone' => $request->phone,
+                'customername' => $request->customername,
+                'order_id'=>    $order_id,
+                'created_at' =>  $date,
+            ];
             
-    //         $data = new Order();
-    //         $data->productname = $productname;
-    //         $data->phone = $request->phone;
-    //         $data->quantity = $request->quantity;
-    //         $data->customername = $request->customername;
-    //         $data->save();
+            DB::table('customers')->insert( $saverecord);
+            $last_id = DB::table('customers')->latest('id')->first();
+        
+         foreach($request->product as $key=>$product)
+         {
 
-    //      }
-    //        return redirect()->back()
-    //                            ->with(['success' => 'Order Added Successfully.']);
-    //      }
-    //         catch(Exception $e){
-    //          return redirect()->back()
-    //                         ->with(['failed' => 'Failed.']);
-    //      }
-    // }
+        
+            //$ids[] = DB::table('customers')->insertGetId(...);
+         //  $id = DB::table('customers')->whereIn('id', $ids)->get();
+          
+          
+           $saveorder = [
+              
+              
+                'product' => $request->product[$key],
+                'quantity' => $request->quantity[$key],
+                'customer_id'=> $last_id->id,
+                'created_at' =>  $date,
+               
+            ];
+
+        //   dd($saveorder);
+        //   exit;
+            DB::table('orders')->insert( $saveorder);
+            // $data = new Order();
+            // $data->productname = $productname;
+            // $data->phone = $request->phone;
+            // $data->quantity = $request->quantity;
+            // $data->customername = $request->customername;
+            // $data->save();
+
+         }
+           return redirect()->back()
+                               ->with(['success' => 'Order Added Successfully.']);
+         }
+            catch(Exception $e){
+             return redirect()->back()
+                            ->with(['failed' => 'Failed.']);
+         }
+    }
 
 
 

@@ -3,21 +3,22 @@
     <table border = "1">
     <title>View Order</title>
 <tr>
-<td>ID</td>
-<td>Order ID</td>
 
-<td>Net Amount</td>
+<th>Order ID</th>
+<th>Product Name</th>
+<th>Net Amount</th>
+<!-- <th>Total</th> -->
 
 
 </tr>
 @foreach ($order as $ord)
 
 <tr>
-<td>{{ $ord->id }}</td>
-<td>{{ $ord->orderid }}</td>
 
+<td>{{ $ord->order_id }}</td>
 
-<td>{{$ord->price * $ord->quantity }}</td>
+<td>{{ $ord->productname }}</td>
+<td>{{$ord->price * $ord->quantity }} </td>
 
 
 @endforeach

@@ -18,6 +18,9 @@
         
             <div class="col-10 offset-1 mt-5">
            
+<input type="button" class="addRow" value="ADD PRODUCT" />
+<input type="button" onclick="remProd()" value="REMOVE"/>
+<hr />
                 <div class="card">
                     <div class="card-header bg-primary">
                         <h3 class="text-white">ORDER MANAGEMENT</h3>
@@ -43,6 +46,8 @@
                                     <div class="form-group">
                                         <strong>Customer Name:</strong>
                                         <input type="text" name="customername" class="form-control" placeholder="Customer Name" value="{{ old('customername') }}">
+                                      
+                                        <input type="hidden" name="orderid" class="form-control" placeholder="Customer Name" value="{{$orderid}}"> 
                                         @if ($errors->has('customername'))
                                             <span class="text-danger">{{ $errors->first('customername') }}</span>
                                         @endif
@@ -63,7 +68,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <strong>Quantity:</strong>
-                                        <input type="text" name="quantity" class="form-control" placeholder="Quantity" value="{{ old('quantity') }}">
+                                        <input type="text" name="quantity[]" class="form-control" placeholder="Quantity" value="{{ old('quantity') }}">
                                         @if ($errors->has('quantity'))
                                             <span class="text-danger">{{ $errors->first('quantity') }}</span>
                                         @endif
@@ -73,7 +78,7 @@
                                     <div class="form-group">
                                         <strong>Product:</strong>
 
-                                        <select id='product' name="product" class="form-control">
+                                        <select id='product' name="product[]" class="form-control">
                                         @foreach($product as $pro)
                                       
                                      <option value="{{ $pro->id }}">{{$pro->productname}}</option>
@@ -86,7 +91,10 @@
                                 </div>
                             </div>
                           
-                     
+                            <div id="dynamicRow" style="display: none">
+                             
+                            </div>
+                            </div>
                             <div class="form-group text-center">
                                 <button class="btn btn-success btn-submit">Submit</button>
                             </div>
@@ -112,7 +120,7 @@
 
 <tr>
 <td>{{ $ord->id }}</td>
-<td>{{ $ord->orderid }}</td>
+<td>{{ $ord->order_id }}</td>
 <td>{{ $ord->customername }}</td>
 <td>{{$ord->phone}}</td>
 <td>{{$ord->price * $ord->quantity }}</td>
@@ -128,22 +136,52 @@
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript">
-debugger;
-//Show Hide TextBox on Button Click using jQuery
-$(function () {
-debugger;
-$("#btnYes").click(function () {
-if ($(this).val() == "Yes") {
-$("#divAdhar").show();
+$('.addRow').on("click",function()
+{
+    addRow();
+});
+function addRow()
+{
+    $("form").append(
+        ' <div id="hidden" class="row">'+
+        ' <div class="col-md-6">'+
+        '<div class="form-group">'+
+                                        '<strong>Quantity:</strong>'+
+                                       '<input type="text" id="quantity" class="race"name="quantity[]" class="form-control" placeholder="Quantity" value="{{ old("quantity") }}">'+
+                                        '@if ($errors->has("quantity"))'+
+                                            '<span class="text-danger">{{ $errors->first("quantity") }}</span>'+
+                                        '@endif'+
+                                    '</div>'+
+                                    '</div>'+
+                                   ' <div class="col-md-6">'+
+                                    '<div class="form-group">'+
+                                        '<strong>Product:</strong>'+
+
+                                        '<select id="product" name="product[]" class="form-control">'+
+                                        '@foreach($product as $pro)'+
+                                      
+                                     '<option value="{{ $pro->id }}">{{$pro->productname}}</option>'+
+
+                                     '@endforeach'+
+                                       '</select>'+
+                                      
+
+                                   '</div>'+
+                                '</div>'+
+                                '</div>'
+                                    
+                                    
+                                    
+                                    );
+  
+
 }
-});
-$("#btnNo").click(function () {
-if ($(this).val() == "No") {
-$("#divAdhar").hide();
+
+function remProd()
+{
+   $("#hidden").last().remove();
 }
-});
-});
 </script>
 
 
-                     
+           

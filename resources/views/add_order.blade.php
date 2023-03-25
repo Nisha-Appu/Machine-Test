@@ -105,7 +105,7 @@
         </div>
     </div>
 
-    <table border = "1">
+    <table  id="table" border = "1">
     <title>View Order</title>
 <tr>
 <td>ID</td>
@@ -113,26 +113,47 @@
 <td>Customer Name</td>
 <td>Phone</td>
 <td>Net Amount</td>
+<td>Product Name</td>
 <td>Order Date</td>
 <td>Actions</td>
 </tr>
 @foreach ($order as $ord)
 
 <tr>
-<td>{{ $ord->id }}</td>
-<td>{{ $ord->order_id }}</td>
-<td>{{ $ord->customername }}</td>
+<td>{{$ord->id}}</td>
+<td>{{$ord->order_id}}</td>
+<td>{{$ord->customername}}</td>
 <td>{{$ord->phone}}</td>
-<td>{{$ord->price * $ord->quantity }}</td>
+
+
+<td>{{$ord->quantity * $ord->price}}</td>
+
+<td>{{ $ord->productname }}</td>
 <td>{{$ord->created_at}}</td>
 <td><a href = 'delete_order/{{ $ord->id }}'>Delete</a></td>
 <td><a href = 'edit_order/{{ $ord->id }}'>Edit</a></td>
 <td><a href = 'invoice/{{ $ord->id }}'>Invoice</a></td>
+</tr>
 @endforeach
 </table>
+<span id="sumV" ></span>
 </body>
 </html>
 
+<script>
+    var table = document.getElementById("table");
+    getSum();
+    function getSum()
+    {
+var sumVal = 0;
+for(var i=1; i<table.rows.length; i++)
+{
+    sumVal = sumVal+table.rows[i].cells[2].innerHtml;
+}
+console.log("sum => "+sumVal);
+    }
+
+    </script>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script type="text/javascript">

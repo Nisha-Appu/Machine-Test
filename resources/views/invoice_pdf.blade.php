@@ -5,23 +5,28 @@
 <tr>
 
 <th>Order ID</th>
-<th>Product Name</th>
-<th>Net Amount</th>
-<!-- <th>Total</th> -->
+<th>Products</th>
 
-
+<th></th>
+<th>Total</th>
 </tr>
-@foreach ($order as $ord)
+
+
 
 <tr>
+<td>{{ $order_id }}</td>
 
-<td>{{ $ord->order_id }}</td>
+@foreach ($order as $ord)
+
 
 <td>{{ $ord->productname }}</td>
-<td>{{$ord->price * $ord->quantity }} </td>
+
 
 
 @endforeach
+<td>{{$total}} </td>
+
+</tr>
 </table>
 </body>
 </html>

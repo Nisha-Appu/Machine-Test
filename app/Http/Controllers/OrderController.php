@@ -33,26 +33,12 @@ class OrderController extends Controller
         
         ->get()->unique('customername');
         
-        // $order = Order::join('products', 'products.id', '=', 'orders.product')
-        //         ->get(['products.*', 'orders.*'])->unique('customername');
-              //  $storedItem['price'] = $order->price * $order['qty'];
-//  return  $order;
-//  exit;
-foreach ($orders as $ord)
-{
-
-    // $cart->total = $cart->product_price * $cart->cart_list_quantity;
-
-$order_id = $ord->order_id;
-$ord->total =  $ord->price * $ord->quantity;
-$ord->total_sum = $orders->sum('total'); 
-
-}
+ 
 
 //return $ord->total_sum ;
            $orderid =  random_int(1000, 9999);
 
-        return view('add_order',['product'=>$product,'order'=>$order,'orders'=>$orders,'orderid'=>$orderid,'total'=> $ord->total_sum]);
+        return view('add_order',['product'=>$product,'order'=>$order,'orders'=>$orders,'orderid'=>$orderid]);
         }
 
 

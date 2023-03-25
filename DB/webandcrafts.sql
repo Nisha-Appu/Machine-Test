@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2023 at 04:11 AM
+-- Generation Time: Mar 25, 2023 at 05:29 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 8.0.3
 
@@ -45,6 +45,28 @@ INSERT INTO `categories` (`id`, `Category`, `created_at`, `updated_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `customername` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` date DEFAULT NULL,
+  `updated_at` date DEFAULT NULL,
+  `order_id` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`id`, `customername`, `phone`, `created_at`, `updated_at`, `order_id`) VALUES
+(1, 'John doe', '4556', '2025-03-23', NULL, '8474');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `failed_jobs`
 --
 
@@ -81,7 +103,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (4, '2019_12_14_000001_create_personal_access_tokens_table', 1),
 (5, '2023_03_10_165735_create_categories_table', 1),
 (6, '2023_03_10_174049_create_products_table', 2),
-(8, '2023_03_11_151017_create_orders_table', 3);
+(8, '2023_03_11_151017_create_orders_table', 3),
+(10, '2023_03_16_094756_add_user_id_to_orders', 4),
+(11, '2023_03_19_103806_create_customers_table', 4),
+(12, '2023_03_19_110633_add_orders_to_customers', 5);
 
 -- --------------------------------------------------------
 
@@ -91,22 +116,21 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `customername` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `orderid` varchar(200) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `customer_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `quantity` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `product` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(11) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `created_at` date DEFAULT NULL,
+  `updated_at` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `customername`, `orderid`, `quantity`, `product`, `phone`, `created_at`, `updated_at`) VALUES
-(1, 'John doe', '1062', '3', '1', '4546567', '2023-03-12 13:22:15', '2023-03-12 13:22:15'),
-(2, 'Customer Name:', '1146', '9', '2', '657657', '2023-03-12 13:50:15', '2023-03-12 13:50:15');
+INSERT INTO `orders` (`id`, `customer_id`, `quantity`, `product`, `created_at`, `updated_at`) VALUES
+(1, '1', '1', '1', '2025-03-23', NULL),
+(2, '1', '2', '2', '2025-03-23', NULL),
+(3, '2', '4', '1', '2023-03-25', '2023-03-25');
 
 -- --------------------------------------------------------
 
@@ -161,7 +185,7 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `productname`, `image`, `category`, `price`, `created_at`, `updated_at`) VALUES
 (1, 'Sony Tv', '1678647044.jpg', '1', 20000, '2023-03-12 13:20:44', '2023-03-12 13:20:44'),
-(2, 'One Plus Buds', '1678647084.jpg', '2', 3000, '2023-03-12 13:21:24', '2023-03-12 13:21:24');
+(2, 'One Plus Buds', '1678702160.jpg', '2', 3000, '2023-03-12 13:21:24', '2023-03-13 04:39:20');
 
 -- --------------------------------------------------------
 
@@ -188,6 +212,12 @@ CREATE TABLE `users` (
 -- Indexes for table `categories`
 --
 ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -247,6 +277,12 @@ ALTER TABLE `categories`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `failed_jobs`
 --
 ALTER TABLE `failed_jobs`
@@ -256,13 +292,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -274,7 +310,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
